@@ -1,44 +1,49 @@
-' VBA Macro to Save Selected Email and Attachments to a Dated Folder with Sender Name
+' VBA Macro that Prompts for a Project Folder
 
-Sub SaveEmailAndAttachments()
+Sub SaveEmailAndAttachments_PromptForProject()
     ' --- USER: UPDATE THIS VARIABLE ---
-    ' Set the base path for your project. Make sure it ends with a backslash \
-    Const baseFolderPath As String = "K:\Path\To\Your\ProjectFolder\"
+    ' Set the root path where all your project folders are located.
+    Const projectRootPath As String = "K:\Master\Project List\"
     ' ---------------------------------
 
     Dim olItem As Object
     Dim olMail As Outlook.MailItem
     Dim olAttachment As Outlook.Attachment
-    Dim subjectStr As String
-    Dim dateStr As String
-    Dim folderPath As String
-    Dim filePath As String
+    Dim subjectStr, dateStr, folderPath, filePath, senderStr As String
+    Dim projectFolderName As String
+    Dim finalBasePath As String
     Dim fs As Object ' FileSystemObject
+
+    ' --- 1. Get Project Name from User ---
+    projectFolderName = InputBox("Enter the name of the project folder:", "Select Project")
     
-    ' *** NEW: Added variable for the sender's name ***
-    Dim senderStr As String
+    ' Exit if the user cancels or enters nothing
+    If Trim(projectFolderName) = "" Then
+        Exit Sub
+    End If
+    
+    ' Construct the final base path for this project
+    finalBasePath = projectRootPath & projectFolderName & "\"
 
     ' Get the currently selected item in Outlook
     Set olItem = Application.ActiveExplorer.Selection.Item(1)
-
-    ' Ensure the selected item is an email
     If TypeName(olItem) <> "MailItem" Then
         MsgBox "Please select an email before running this macro.", vbExclamation
         Exit Sub
     End If
-
     Set olMail = olItem
     Set fs = CreateObject("Scripting.FileSystemObject")
 
-    ' --- 1. Prepare Folder and File Names ---
+    ' --- 2. Check if the Project Folder Exists ---
+    If Not fs.FolderExists(finalBasePath) Then
+        MsgBox "The specified project folder does not exist:" & vbCrLf & finalBasePath, vbCritical
+        Exit Sub
+    End If
     
-    ' *** NEW: Get and sanitize the sender's name ***
+    ' --- 3. Prepare Subfolder and File Names ---
     senderStr = olMail.SenderName
-    senderStr = Replace(senderStr, "/", "-")
-    senderStr = Replace(senderStr, "\", "-")
-    senderStr = Replace(senderStr, ":", "-")
-    
-    ' Sanitize the subject line to remove characters invalid for folder names
+    senderStr = Replace(Replace(senderStr, "/", "-"), "\", "-") ' Sanitize
+
     subjectStr = olMail.Subject
     subjectStr = Replace(subjectStr, "/", "-")
     subjectStr = Replace(subjectStr, "\", "-")
@@ -50,23 +55,18 @@ Sub SaveEmailAndAttachments()
     subjectStr = Replace(subjectStr, ">", "")
     subjectStr = Replace(subjectStr, "|", "-")
 
-    ' Format the received date as yyyy.mm.dd
     dateStr = Format(olMail.ReceivedTime, "yyyy.mm.dd")
 
-    ' --- 2. Create the Destination Folder ---
-    ' *** UPDATED: Added the senderStr variable to the folder path ***
-    folderPath = baseFolderPath & dateStr & " - " & senderStr & " - " & subjectStr
-    
+    ' --- 4. Create the Destination Subfolder ---
+    folderPath = finalBasePath & dateStr & " - " & senderStr & " - " & subjectStr
     If Not fs.FolderExists(folderPath) Then
         fs.CreateFolder folderPath
     End If
 
-    ' --- 3. Save the Email Message ---
-    ' Use the sanitized subject for the file name as well
+    ' --- 5. Save the Email and Attachments ---
     filePath = folderPath & "\" & subjectStr & ".msg"
     olMail.SaveAs filePath, olMSG
 
-    ' --- 4. Save All Attachments ---
     If olMail.Attachments.Count > 0 Then
         For Each olAttachment In olMail.Attachments
             olAttachment.SaveAsFile folderPath & "\" & olAttachment.FileName
@@ -74,5 +74,4 @@ Sub SaveEmailAndAttachments()
     End If
     
     MsgBox "Email and attachments saved successfully to:" & vbCrLf & folderPath, vbInformation
-
 End Sub
