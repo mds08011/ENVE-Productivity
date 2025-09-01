@@ -11,6 +11,10 @@ Click a custom button on your toolbar.
 
 The macro automatically creates a folder like K:\YourProject\2025.09.01 - Project Update and saves the email and any PDFs inside.
 
+The new folder structure will be: yyyy.mm.dd - Sender Name - Subject
+For example: K:\YourProject\2025.09.01 - John Smith - Submittal RFI Response
+
+
 
 Setup and Code:
 
