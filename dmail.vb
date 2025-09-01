@@ -58,7 +58,7 @@ Sub SaveEmailAndAttachments_PromptForProject()
     dateStr = Format(olMail.ReceivedTime, "yyyy.mm.dd")
 
     ' --- 4. Create the Destination Subfolder ---
-    folderPath = finalBasePath & dateStr & " - " & senderStr & " - " & subjectStr
+    folderPath = finalBasePath & dateStr & " - " & subjectStr & " [from " & senderStr & "]"
     If Not fs.FolderExists(folderPath) Then
         fs.CreateFolder folderPath
     End If
