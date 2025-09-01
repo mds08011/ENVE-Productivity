@@ -3,7 +3,7 @@
 Sub SaveEmailAndAttachments_PromptForProject()
     ' --- USER: UPDATE THIS VARIABLE ---
     ' Set the root path where all your project folders are located.
-    Const projectRootPath As String = "K:\Master\Project List\"
+    Const projectRootPath As String = ""
     ' ---------------------------------
 
     Dim olItem As Object
