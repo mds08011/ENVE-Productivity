@@ -29,3 +29,16 @@ Insert a Module: In the new window, go to Insert > Module.
 Paste the Code: Copy and paste the code below into the white space.
 
 Customize and Save: You must change the baseFolderPath variable to your project's root folder path. Save your work (Ctrl + S).
+
+
+
+
+
+
+This version will pop up a simple input box each time you run the macro, asking for the specific project folder name. You just type the name (e.g., "Project 123 - City Hall") and it does the rest.
+This method is great because it requires no pre-configuration.
+How it Works:
+Select an email and run the macro.
+An input box appears asking for the project folder name.
+You type Project 123 - City Hall.
+The macro saves the files to K:\Master\Project List\Project 123 - City Hall\2025.09.01 - Sender
