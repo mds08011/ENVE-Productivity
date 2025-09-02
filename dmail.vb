@@ -1,9 +1,9 @@
-' VBA Macro that Prompts for a Project Folder
+' VBA Macro that Prompts for a Project Folder and saves as .MSG and .PDF
 
 Sub SaveEmailAndAttachments_PromptForProject()
     ' --- USER: UPDATE THIS VARIABLE ---
     ' Set the root path where all your project folders are located.
-    Const projectRootPath As String = ""
+    Const projectRootPath As String = "K:\Master\Project List\"
     ' ---------------------------------
 
     Dim olItem As Object
@@ -13,16 +13,19 @@ Sub SaveEmailAndAttachments_PromptForProject()
     Dim projectFolderName As String
     Dim finalBasePath As String
     Dim fs As Object ' FileSystemObject
+    
+    '--- Variables for PDF Export ---
+    Dim olInspector As Outlook.Inspector
+    Dim wdDoc As Word.Document
+    Dim pdfPath As String
 
     ' --- 1. Get Project Name from User ---
     projectFolderName = InputBox("Enter the name of the project folder:", "Select Project")
     
-    ' Exit if the user cancels or enters nothing
     If Trim(projectFolderName) = "" Then
         Exit Sub
     End If
     
-    ' Construct the final base path for this project
     finalBasePath = projectRootPath & projectFolderName & "\"
 
     ' Get the currently selected item in Outlook
@@ -42,7 +45,7 @@ Sub SaveEmailAndAttachments_PromptForProject()
     
     ' --- 3. Prepare Subfolder and File Names ---
     senderStr = olMail.SenderName
-    senderStr = Replace(Replace(senderStr, "/", "-"), "\", "-") ' Sanitize
+    senderStr = Replace(Replace(senderStr, "/", "-"), "\", "-")
 
     subjectStr = olMail.Subject
     subjectStr = Replace(subjectStr, "/", "-")
@@ -58,12 +61,14 @@ Sub SaveEmailAndAttachments_PromptForProject()
     dateStr = Format(olMail.ReceivedTime, "yyyy.mm.dd")
 
     ' --- 4. Create the Destination Subfolder ---
-    folderPath = finalBasePath & dateStr & " - " & subjectStr & " [from " & senderStr & "]"
+    ' *** UPDATED FOLDER NAME ORDER AS REQUESTED ***
+    folderPath = finalBasePath & dateStr & " - " & senderStr & " - " & subjectStr
+    
     If Not fs.FolderExists(folderPath) Then
         fs.CreateFolder folderPath
     End If
 
-    ' --- 5. Save the Email and Attachments ---
+    ' --- 5. Save the Email as .MSG and Attachments ---
     filePath = folderPath & "\" & subjectStr & ".msg"
     olMail.SaveAs filePath, olMSG
 
@@ -73,5 +78,24 @@ Sub SaveEmailAndAttachments_PromptForProject()
         Next olAttachment
     End If
     
-    MsgBox "Email and attachments saved successfully to:" & vbCrLf & folderPath, vbInformation
+    ' --- 6. Save the Email Body as a PDF ---
+    On Error Resume Next ' In case Word automation fails
+    
+    pdfPath = folderPath & "\" & subjectStr & ".pdf"
+    
+    Set olInspector = olMail.GetInspector
+    Set wdDoc = olInspector.WordEditor
+    
+    If Not wdDoc Is Nothing Then
+        wdDoc.ExportAsFixedFormat OutputFileName:=pdfPath, _
+                                  ExportFormat:=wdExportFormatPDF
+    End If
+    
+    olInspector.Close olDiscard
+    
+    Set wdDoc = Nothing
+    Set olInspector = Nothing
+    On Error GoTo 0 ' Resume normal error handling
+    
+    MsgBox "Email, PDF, and attachments saved successfully to:" & vbCrLf & folderPath, vbInformation
 End Sub
