@@ -62,7 +62,7 @@ Sub SaveEmailAndAttachments_PromptForProject()
 
     ' --- 4. Create the Destination Subfolder ---
     ' *** UPDATED FOLDER NAME ORDER AS REQUESTED ***
-    folderPath = finalBasePath & dateStr & " - " & subjectStr & " - " & "["senderStr"]"
+    folderPath = finalBasePath & dateStr & " - " & subjectStr & " [from " & senderStr & "]"
     
     If Not fs.FolderExists(folderPath) Then
         fs.CreateFolder folderPath
