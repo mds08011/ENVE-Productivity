@@ -2,7 +2,7 @@
 
 A collection of automation scripts and tools designed to streamline civil engineering project management workflows. These tools assist with file organization, email archiving, drawing management, and other repetitive tasks common in water/wastewater utility design.
 
-## Repository Contents
+##  Repository Contents
 
 ### 1. Outlook Automation (VBA)
 Located in: `/Email Saving`
@@ -31,6 +31,8 @@ These scripts are designed to be run directly on Windows. Right-click any `.ps1`
     * Targets hydraulic modeling folders (WaterGEMS, InfoWorks, etc.) and removes temporary simulation files (`.out`, `.log`, `.bak`), leaving only the essential model source files.
 * **`/Create File List`**
     * Generates a clean text-based "Table of Contents" of every file in a folder and its subfolders. Ideal for creating transmittal logs for client submissions.
+* **`/Deep Search`**
+    * Scans a directory tree for files matching a specific keyword and displays results in a searchable, sortable Grid View window. Select a file and click "OK" to copy its full network path to your clipboard.
 * **`/Project Folder Sizes`**
     * Scans a master project directory and reports the total disk usage of each project folder. Helps identify large projects for archiving.
 * **`/Recently Modified Files`**
