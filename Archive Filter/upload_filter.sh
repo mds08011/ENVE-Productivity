@@ -66,3 +66,25 @@ if [ "$DRY_RUN" = true ]; then
     echo "Dry run complete. If the output looks correct:"
     echo "Edit this script and change DRY_RUN=true to DRY_RUN=false"
 fi
+
+# ================= RUN =================
+
+#     Save the file: Save the text above as upload_filter.sh (you can put it in your Home folder).
+
+#  Open terminal and run:
+#  
+# chmod +x upload_filter.sh
+
+# Run the Test:
+# Bash
+
+#     ./upload_filter.sh
+
+#         It will list all the files it plans to upload.
+
+#         Verify that you do not see .dwg or .tif files in the list, but you do see your PDFs and Excel sheets.
+
+#     Run for Real: Open the file, change line 14 to DRY_RUN=false, save it, and run ./upload_filter.sh again.
+
+
+# (${ext^^}) which adds an uppercase exclusion for every item in list.
