@@ -4,8 +4,8 @@
 SEARCH_DIR="/media/mds08011/Elements/"
 
 # UPDATED EXCLUDE LIST
-# Added: pst, dll, cab, xml
-EXCLUDE_LIST="dwg bak shp shx dbf prj cpg sbn sbx rvt rte rfa dgn dwf dxf ifc sat skp aec atx gdbtable las laz pts e57 gdb mdb geodatabase kml kmz nwc nwd obj 3ds fbx tiff tif ipt iam idw nc sda pln str ovr xml tfw mdx trc sid ecw jp2 sv$ rcp rcs jpg out tmp hdf msg ts dng grs heic hbn nef rpc stp skb jpeg sqlite sqllite png mms rpt adf h5 rws x_t qsb mpk hof flt fit prc pack dem pst dll cab"
+# Now includes: (no_extension), idx, eml, psd, img, ghr, 402, vhf, asc, bmp, ghr_backup, crdownload, tem, chm
+EXCLUDE_LIST="dwg bak shp shx dbf prj cpg sbn sbx rvt rte rfa dgn dwf dxf ifc sat skp aec atx gdbtable las laz pts e57 gdb mdb geodatabase kml kmz nwc nwd obj 3ds fbx tiff tif ipt iam idw nc sda pln str ovr xml tfw mdx trc sid ecw jp2 sv$ rcp rcs jpg out tmp hdf msg ts dng grs heic hbn nef rpc stp skb jpeg sqlite sqllite png mms rpt adf h5 rws x_t qsb mpk hof flt fit prc pack dem pst dll cab (no_extension) idx eml psd img ghr 402 vhf asc bmp ghr_backup crdownload tem chm"
 
 echo "=========================================="
 echo "Analyzing: $SEARCH_DIR"
@@ -47,10 +47,10 @@ BEGIN {
     }
 }
 END {
-    # We print raw data here to be sorted/formatted by the next awk command
+    # Print raw data to be formatted by the next awk command
     for (e in sum) {
         gb = sum[e] / 1024 / 1024 / 1024
-        # Threshold: Only show types > 10MB (0.01 GB) to avoid flooding terminal with empty files
+        # Threshold: Only show types > 10MB (0.01 GB) to keep the list readable
         if (gb > 0.01) { 
             print type[e], e, count[e], gb
         }
