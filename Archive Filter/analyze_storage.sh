@@ -4,13 +4,13 @@
 SEARCH_DIR="/media/mds08011/Elements/"
 
 # UPDATED EXCLUDE LIST
-# Added: skb, jpeg, sqlite, png, mms, rpt, adf, h5, rws, x_t, qsb, mpk, hof, fit/flt, prc, pack, dem
-EXCLUDE_LIST="dwg bak shp shx dbf prj cpg sbn sbx rvt rte rfa dgn dwf dxf ifc sat skp aec atx gdbtable las laz pts e57 gdb mdb geodatabase kml kmz nwc nwd obj 3ds fbx tiff tif ipt iam idw nc sda pln str ovr xml tfw mdx trc sid ecw jp2 sv$ rcp rcs jpg out tmp hdf msg ts dng grs heic hbn nef rpc stp skb jpeg sqlite sqllite png mms rpt adf h5 rws x_t qsb mpk hof flt fit prc pack dem"
+# Added: pst, dll, cab, xml
+EXCLUDE_LIST="dwg bak shp shx dbf prj cpg sbn sbx rvt rte rfa dgn dwf dxf ifc sat skp aec atx gdbtable las laz pts e57 gdb mdb geodatabase kml kmz nwc nwd obj 3ds fbx tiff tif ipt iam idw nc sda pln str ovr xml tfw mdx trc sid ecw jp2 sv$ rcp rcs jpg out tmp hdf msg ts dng grs heic hbn nef rpc stp skb jpeg sqlite sqllite png mms rpt adf h5 rws x_t qsb mpk hof flt fit prc pack dem pst dll cab"
 
 echo "=========================================="
 echo "Analyzing: $SEARCH_DIR"
 echo "Target Cloud Cap: 2048 GB (2TB)"
-echo "Mode: Grouped Lists (Upload vs Exclude)"
+echo "Mode: Full List (No Item Limit)"
 echo "Scanning files..."
 
 # 1. Gather data
@@ -50,7 +50,8 @@ END {
     # We print raw data here to be sorted/formatted by the next awk command
     for (e in sum) {
         gb = sum[e] / 1024 / 1024 / 1024
-        if (gb > 0.01) { # Only pass significant items to the formatter
+        # Threshold: Only show types > 10MB (0.01 GB) to avoid flooding terminal with empty files
+        if (gb > 0.01) { 
             print type[e], e, count[e], gb
         }
     }
@@ -85,25 +86,23 @@ BEGIN {
 END {
     # --- PRINT UPLOAD LIST ---
     print "\n=========================================="
-    print "   KEEP / UPLOAD LIST (Top 20)"
+    print "   KEEP / UPLOAD LIST"
     print "=========================================="
     printf fmt_head, "EXT", "COUNT", "SIZE (GB)"
     print "------------------------------------------"
-    # Print top 20 uploads
-    limit = (u_count < 20) ? u_count : 20
-    for (i=0; i<limit; i++) {
+    # Print ALL uploads found
+    for (i=0; i<u_count; i++) {
         printf "%s", upload_rows[i]
     }
 
     # --- PRINT EXCLUDE LIST ---
     print "\n=========================================="
-    print "   EXCLUSION LIST (Top 20)"
+    print "   EXCLUSION LIST"
     print "=========================================="
     printf fmt_head, "EXT", "COUNT", "SIZE (GB)"
     print "------------------------------------------"
-    # Print top 20 excludes
-    limit = (e_count < 20) ? e_count : 20
-    for (i=0; i<limit; i++) {
+    # Print ALL excludes found
+    for (i=0; i<e_count; i++) {
         printf "%s", exclude_rows[i]
     }
 
