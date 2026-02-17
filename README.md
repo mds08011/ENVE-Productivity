@@ -50,9 +50,21 @@ These scripts are designed to be run directly on Windows. Right-click any `.ps1`
     * **Word to PDF:** A PowerShell script that batch converts all `.doc` and `.docx` files in a folder to PDF using the Microsoft Word engine.
     * **Merge PDFs:** A Python script (requires `pypdf`) that stitches multiple PDF files into a single document (e.g., combining a Specification package).
 
+---
+
+### 4. Storage & Backup Utilities (Bash)
+
+* **`/Archive Filter`**
+    * **`analyze_storage.sh`:** Scans a source directory and calculates the total size of files to be uploaded versus excluded, based on a configurable list of extensions. Helps ensure backups fit within storage limits.
+    * **`upload_filter.sh`:** Performs the actual upload using `rsync`, excluding the specified file types. Includes a "dry run" mode to preview changes.
+* **`/Video Duplicate Finder`**
+    * **`find_dupes.sh`:** Scans a directory for video files (mp4, wmv, mkv, etc.) and uses MD5 checksums to identify exact duplicates.
+    * **`measure_dupes.sh`:** Identifies duplicate videos and calculates the total disk space wasted by them.
+
 ## How to Run
 * **PowerShell:** Right-click the `.ps1` file > "Run with PowerShell".
 * **Python:** Open a terminal in the script folder and run `python script_name.py`.
+* **Bash:** Open a terminal, make the script executable with `chmod +x script_name.sh`, and run with `./script_name.sh`.
 * **Outlook:** Add the macro to your Quick Access Toolbar for one-click archiving.
 
 ***
